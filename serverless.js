@@ -112,7 +112,7 @@ class Website extends Component {
 
     // Configure custom domain, if specified
     if (inputs.domain) {
-      const domain = await this.load('@serverless/domain')
+      const domain = await this.load('@ublend-npm/serverless-compoonent-domain')
       const subdomain = inputs.domain.split('.')[0]
       const secondLevelDomain = inputs.domain.replace(`${subdomain}.`, '')
 
