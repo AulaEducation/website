@@ -9,6 +9,7 @@ const {
   configureDomainForBucket,
   configureBucketForRedirect
 } = require('./utils')
+const regionUrls = require('./awsRegionUrls')
 
 /*
  * Website
@@ -102,7 +103,7 @@ class Website extends Component {
 
     this.state.bucketName = inputs.bucketName
     this.state.region = inputs.region
-    this.state.url = `http://${bucketOutputs.name}.s3-website-${inputs.region}.amazonaws.com`
+    this.state.url = `http://${bucketOutputs.name}.${regionUrls[inputs.region]}`
     await this.save()
 
     const outputs = {
@@ -117,6 +118,7 @@ class Website extends Component {
       const secondLevelDomain = inputs.domain.replace(`${subdomain}.`, '')
 
       const domainInputs = {
+        region: this.state.region,
         domain: secondLevelDomain,
         subdomains: {}
       }
@@ -153,7 +155,7 @@ class Website extends Component {
     // Remove custom domain, if specified
     if (this.state.domain) {
       this.context.debug(`Removing custom domain.`)
-      const domain = await this.load('@serverless/domain')
+      const domain = await this.load('@ublend-npm/serverless-compoonent-domain')
       await domain.remove()
     }
 
