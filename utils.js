@@ -67,6 +67,46 @@ const configureBucketForHosting = async (s3, bucketName) => {
   }
 }
 
+const configureSecurityHeadersInjectorLambda = async ({ lambda, cf, institution, domainName }) => {
+  const { Versions } = await lambda
+    .listVersionsByFunction({
+      FunctionName: `${institution}-security-headers-injector-prod-injectSecurityHeaders`
+    })
+    .promise()
+
+  const latestPublishedVersion = Versions.pop()
+
+  const { DistributionList } = await cf.listDistributions().promise()
+
+  const { Id: distributionId } = DistributionList.Items.find(({ Aliases: { Items } }) => {
+    return Items.find((alias) => alias === domainName)
+  })
+  const { DistributionConfig, ETag } = await cf
+    .getDistributionConfig({ Id: distributionId })
+    .promise()
+
+  const newDistroConfig = {
+    ...DistributionConfig,
+    DefaultCacheBehavior: {
+      ...DistributionConfig.DefaultCacheBehavior,
+      LambdaFunctionAssociations: {
+        Quantity: 1,
+        Items: [
+          {
+            EventType: 'origin-response',
+            LambdaFunctionARN: latestPublishedVersion.FunctionArn,
+            IncludeBody: false
+          }
+        ]
+      }
+    }
+  }
+  await cf
+    .updateDistribution({ DistributionConfig: newDistroConfig, Id: distributionId, IfMatch: ETag })
+    .promise()
+}
+
 module.exports = {
-  configureBucketForHosting
+  configureBucketForHosting,
+  configureSecurityHeadersInjectorLambda
 }

@@ -4,18 +4,13 @@ const util = require('util')
 const types = require('./serverless.types.js')
 const exec = util.promisify(require('child_process').exec)
 const { Component, utils } = require('@serverless/core')
-const {
-  configureBucketForHosting,
-  configureDomainForBucket,
-  configureBucketForRedirect
-} = require('./utils')
+const { configureBucketForHosting, configureSecurityHeadersInjectorLambda } = require('./utils')
 
 /*
  * Website
  */
 
 class Website extends Component {
-
   /**
    * Types
    */
@@ -131,6 +126,23 @@ class Website extends Component {
       outputs.domain = domainOutputs.domains[0]
       this.state.domain = outputs.domain
       await this.save()
+
+      if (inputs.enableSecurityHeaders) {
+        const cf = new aws.CloudFormation({ region: 'us-east-1' })
+        const lambda = new aws.CloudFormation({ region: 'us-east-1' })
+
+        const { institution } = inputs.institution
+        try {
+          await configureSecurityHeadersInjectorLambda({
+            cf,
+            lambda,
+            institution,
+            domain: inputs.domain
+          })
+        } catch (e) {
+          this.context.debug(`Failed configuring security injector lambda: ${e.message}.`)
+        }
+      }
     }
 
     this.context.debug(`Website deployed successfully to URL: ${this.state.url}.`)
