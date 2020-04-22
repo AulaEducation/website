@@ -16,7 +16,6 @@ const regionUrls = require('./awsRegionUrls')
  */
 
 class Website extends Component {
-
   /**
    * Types
    */
@@ -123,11 +122,27 @@ class Website extends Component {
         subdomains: {}
       }
 
+      // eslint-disable-next-line prefer-destructuring
+      let cloudFront = inputs.cloudFront
+      const { institution } = inputs
+      if (inputs.securityHeaders) {
+        cloudFront = {
+          ...cloudFront,
+          customLambdaAssociations: [
+            {
+              functionName: `${institution}-security-headers-injector-prod-injectSecurityHeaders`,
+              type: 'origin-response'
+            }
+          ]
+        }
+      }
+
       domainInputs.subdomains[subdomain] = {
         url: this.state.url,
         bucketName: this.state.bucketName,
-        cloudFront: inputs.cloudFront
+        cloudFront
       }
+
       const domainOutputs = await domain(domainInputs)
 
       outputs.domain = domainOutputs.domains[0]
