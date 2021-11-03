@@ -219,10 +219,10 @@
     globby "^9.2.0"
     ramda "^0.26.0"
 
-"@ublend-npm/serverless-compoonent-domain@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@ublend-npm/serverless-compoonent-domain/-/serverless-compoonent-domain-0.0.7.tgz#9d4afff6e16dc960de6424a845846e97d543b297"
-  integrity sha512-gfivXyoa+PZvd4SMMkPru2+bk01N9Bg3sB6C+QOVZRTBsIg+09yF/AQ2a6L07Y2GMYVE6YnUm9KM62+V02kMPw==
+"@ublend-npm/serverless-compoonent-domain@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@ublend-npm/serverless-compoonent-domain/-/serverless-compoonent-domain-0.0.8.tgz#701dddc567abed405f01ea09b16c60c95bc57b97"
+  integrity sha512-7zAQw1tG8HTMM6NXQh9fVY2pFm3FiZFL7ql50+/4x2o2UYZpCT/8vpKLv/ngp/t9bqvjFT3g9GIsDVLTZlslXQ==
   dependencies:
     "@serverless/core" "^1.0.0"
     "@ublend-npm/aws-lambda" "^0.0.2"
