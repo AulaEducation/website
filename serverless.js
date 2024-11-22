@@ -130,7 +130,7 @@ class Website extends Component {
           ...cloudFront,
           customLambdaAssociations: [
             {
-              functionName: `${institution}-security-headers-injector-prod-injectSecurityHeaders`,
+              functionName: `${institution}-security-headers-injector-prod-injectHeaders`,
               type: 'origin-response'
             }
           ]
