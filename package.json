@@ -1,6 +1,6 @@
 {
   "name": "@ublend-npm/serverless-website-component",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "main": "./serverless.js",
   "publishConfig": {
     "access": "public"
